@@ -4,4 +4,4 @@ init:
 	.venv/bin/pip install -r requirements
 
 run-service:
-	uvicorn service.app:app --reload
+	uvicorn service.app:app --log-level=debug --reload
