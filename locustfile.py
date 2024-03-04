@@ -1,8 +1,23 @@
-from locust import HttpUser, task
+from locust import HttpUser, task, between
+from requests.auth import HTTPBasicAuth
 
 
-class HelloWorldUser(HttpUser):
+class MyUser(HttpUser):
+    wait_time = between(1, 5)   # Задержки между выполнением задач 1-5 seconds
+    host = 'http://localhost:8000'
+
+    def on_start(self):
+        """
+        Выполнятся перед началом работы, для каждого пользователя.
+        """
+        self.client.auth = HTTPBasicAuth(username='user', password='password')
+
     @task
-    def hello_world(self):
-        self.client.get("/hello")
-        self.client.get("/world")
+    def get_items(self):
+        self.client.get("/get_items")
+
+    @task
+    def get_factorial(self):
+        self.client.get("/factorial?num=22")
+        self.client.post("/factorial?num=22")
+        self.client.put("/factorial?num=22")
