@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, status, HTTPException
+from fastapi import FastAPI, Depends, status, HTTPException, Query
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 import logging
@@ -53,17 +53,9 @@ def add_items(item: Item, username: str = Depends(get_current_username)) -> JSON
 
 
 @app.get("/factorial")
-def get_factorial(num: int) -> JSONResponse:
+def get_factorial(num: int = Query(..., ge=0, le=100)) -> JSONResponse:
     logger.info(f'Trying to get factorial of {num}')
-    try:
-        result = factorial(num)
-    except ValueError:
-        logger.error(f'Difficulty in factorial calculation for {num}')
-        return JSONResponse(
-            status_code=HTTPStatus.BAD_REQUEST,
-            content={"result": "Difficulty in factorial calculation"}
-        )
-
+    result = factorial(num)
     return JSONResponse(
         status_code=HTTPStatus.OK,
         content={"result": str(result)}
