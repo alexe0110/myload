@@ -19,5 +19,4 @@ class MyUser(HttpUser):
     @task
     def get_factorial(self):
         self.client.get("/factorial?num=22")
-        self.client.post("/factorial?num=22")
-        self.client.put("/factorial?num=22")
+
