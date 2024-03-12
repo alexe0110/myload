@@ -5,6 +5,8 @@ import logging
 from math import factorial
 from starlette.responses import JSONResponse
 from http import HTTPStatus
+from datetime import datetime
+from random import randint
 
 app = FastAPI()
 
@@ -32,6 +34,8 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
 class Item(BaseModel):
     name: str
     description: str | None = None
+    start_time: datetime | None = None
+    end_time: datetime | None = None
 
 
 @app.get("/get_items")
@@ -48,7 +52,7 @@ def add_items(item: Item, username: str = Depends(get_current_username)) -> JSON
     logger.info(f'Added item: {item}')
     return JSONResponse(
         status_code=HTTPStatus.OK,
-        content={"message": "Item added successfully"}
+        content={"message": "Item added successfully", id: randint(1, 9999)}
     )
 
 
