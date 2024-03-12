@@ -1,7 +1,8 @@
+import json
+
 from locust import HttpUser, task, between
 from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta
-
 
 class MyUser(HttpUser):
     wait_time = between(1, 5)  # Задержки между выполнением задач 1-5 seconds
@@ -22,12 +23,17 @@ class MyUser(HttpUser):
         start_time = datetime.now().astimezone().isoformat()  # Время начала, astimezone добавляет таймзону, isoformat форматирует дату в ISO 8601
         end_time = (datetime.now() + timedelta(hours=2)).astimezone().isoformat()  # Тоже самое, но добавляется дельта(=разница) времени два часа
 
-        result = self.client.post('/add_items', data={
+        result = self.client.post('/add_items', json={
             'name': '123',
             'start_time': start_time,
             'end_time': end_time
         })
 
+        # Нужно десериализовать json, чтобы получить python словарь, с которым можно работать
+        result_des = json.loads(result.text)
+        item_id = result_des.get('id')
+        print(f"Item id is {item_id}")
+
     @task
     def get_factorial(self):
-        self.client.get("/factorial?num=22")
+        self.client.get("/factorial", params={'num': '10'})
