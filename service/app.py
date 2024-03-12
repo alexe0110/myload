@@ -52,7 +52,7 @@ def add_items(item: Item, username: str = Depends(get_current_username)) -> JSON
     logger.info(f'Added item: {item}')
     return JSONResponse(
         status_code=HTTPStatus.OK,
-        content={"message": "Item added successfully", id: randint(1, 9999)}
+        content={"message": "Item added successfully", "id": randint(1, 9999)}
     )
 
 
